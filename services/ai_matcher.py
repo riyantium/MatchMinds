@@ -75,9 +75,13 @@ def _openai_match(current_profile, candidates, api_key):
                     f"Candidate profiles:\n{json.dumps(numbered_candidates)}\n\n"
                     "Return JSON with these fields: "
                     "candidate_number, best_teammate, compatibility_score, "
-                    "shared_interests_or_skills, complementary_skills, explanation. "
+                    "shared_interests_or_skills, complementary_skills, explanation, "
+                    "why_good_match, project_idea, team_name, combined_skills. "
                     "Use a compatibility_score from 0 to 100. "
-                    "Keep explanation to one or two short sentences."
+                    "Keep explanation and why_good_match to one or two short sentences. "
+                    "Make project_idea one practical hackathon idea based on both profiles. "
+                    "Make team_name short and memorable. "
+                    "Make combined_skills a list using skills from both profiles."
                 ),
             },
         ],
@@ -110,6 +114,10 @@ def _normalize_ai_result(result, candidates):
         ),
         "complementary_skills": _as_list(result.get("complementary_skills")),
         "explanation": str(result.get("explanation", "")).strip(),
+        "why_good_match": str(result.get("why_good_match", "")).strip(),
+        "project_idea": str(result.get("project_idea", "")).strip(),
+        "team_name": str(result.get("team_name", "")).strip(),
+        "combined_skills": _as_list(result.get("combined_skills")),
         "source": "openai",
     }
 
@@ -154,18 +162,32 @@ def _fallback_match(current_profile, candidates, message):
         )
 
     best = max(scored_candidates, key=lambda item: item["score"])
+    best_profile = best["profile"].copy()
+    current_name = current_profile.get("name", "This participant")
+    teammate_name = best_profile.get("name", "their teammate")
+    current_interest = _profile_interest(current_profile)
+    teammate_interest = _profile_interest(best_profile)
+    combined_skills = _combined_skills(current_profile, best_profile)
     explanation = (
         "This teammate has the strongest overlap with your skills or interests "
         "and brings useful skills that can complement the project."
     )
+    project_theme = current_interest or teammate_interest or "hackathon collaboration"
 
     return {
         "message": message,
-        "best_teammate": best["profile"].copy(),
+        "best_teammate": best_profile,
         "compatibility_score": best["score"],
         "shared_interests_or_skills": best["shared"],
         "complementary_skills": best["complementary"],
         "explanation": explanation,
+        "why_good_match": explanation,
+        "project_idea": (
+            f"Build a {project_theme} prototype that combines "
+            f"{current_name}'s strengths with {teammate_name}'s skills."
+        ),
+        "team_name": _team_name(current_profile, best_profile),
+        "combined_skills": combined_skills,
         "source": "fallback",
     }
 
@@ -178,6 +200,10 @@ def _empty_match(message):
         "shared_interests_or_skills": [],
         "complementary_skills": [],
         "explanation": "",
+        "why_good_match": "",
+        "project_idea": "",
+        "team_name": "",
+        "combined_skills": [],
         "source": "none",
     }
 
@@ -205,6 +231,48 @@ def _as_list(value):
     if isinstance(value, str) and value.strip():
         return [value.strip()]
     return []
+
+
+def _profile_interest(profile):
+    return (
+        str(
+            profile.get("project_interest")
+            or profile.get("project_idea")
+            or profile.get("domain_interest")
+            or profile.get("interests")
+            or ""
+        )
+        .strip()
+    )
+
+
+def _skills_list(profile):
+    return [
+        skill.strip()
+        for skill in re.split(r"[,;|]+", str(profile.get("skills", "")))
+        if skill.strip()
+    ]
+
+
+def _combined_skills(current_profile, teammate_profile):
+    skills = []
+    seen = set()
+
+    for skill in _skills_list(current_profile) + _skills_list(teammate_profile):
+        normalized = skill.lower()
+        if normalized not in seen:
+            skills.append(skill)
+            seen.add(normalized)
+
+    return skills
+
+
+def _team_name(current_profile, teammate_profile):
+    current_interest = _profile_interest(current_profile)
+    teammate_interest = _profile_interest(teammate_profile)
+    theme = current_interest or teammate_interest or "Hack"
+    keyword = re.split(r"\s+", theme.strip())[0] if theme.strip() else "Hack"
+    return f"Team {keyword.title()} Spark"
 
 
 def _clamp_score(value):

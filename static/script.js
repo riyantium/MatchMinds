@@ -17,6 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const sharedInterestsSkillsElement = document.getElementById("shared-interests-skills");
     const complementarySkillsElement = document.getElementById("complementary-skills");
     const aiExplanationElement = document.getElementById("ai-explanation");
+    const whyGoodMatchElement = document.getElementById("why-good-match");
+    const projectIdeaElement = document.getElementById("project-idea");
+    const teamNameElement = document.getElementById("team-name");
+    const combinedSkillsElement = document.getElementById("combined-skills");
 
     const savedProfileKey = "matchminds_saved_profile";
     const buttonText = {
@@ -290,6 +294,10 @@ document.addEventListener("DOMContentLoaded", () => {
         sharedInterestsSkillsElement.textContent = formatList(match.shared_interests_or_skills);
         complementarySkillsElement.textContent = formatList(match.complementary_skills);
         aiExplanationElement.textContent = match.explanation || "-";
+        whyGoodMatchElement.textContent = match.why_good_match || match.explanation || "-";
+        projectIdeaElement.textContent = match.project_idea || "-";
+        teamNameElement.textContent = match.team_name || "-";
+        combinedSkillsElement.textContent = formatList(match.combined_skills);
     }
 
     function formatTeammate(teammate) {
