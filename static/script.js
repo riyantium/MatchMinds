@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const submitButton = document.getElementById("submit-profile-button");
     const loadDemoProfilesButton = document.getElementById("load-demo-profiles-button");
     const participantSelect = document.getElementById("participant-select");
-    const findSelectedMatchButton = document.getElementById("find-selected-match-button");
+    const findMatchButton = document.getElementById("find-match-button");
     const participantCountElement = document.getElementById("participant-count");
 
     const statusElement = document.getElementById("match-status");
@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedProfileKey = "matchminds_saved_profile";
     const buttonText = {
         submit: "Submit Profile",
-        loadDemoProfiles: "Load Demo Profiles",
-        findSelectedMatch: "Find My Match",
+        loadDemoProfiles: "Quick Demo",
+        findMatch: "\uD83D\uDD0D Find My Match",
     };
 
     let participantProfiles = [];
@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
             saveProfile(submittedProfile);
             restoreProfile(submittedProfile);
             await refreshParticipants(submittedProfile.name);
+            setMode("existing");
 
             statusElement.textContent =
                 "Profile submitted successfully. You can now find your teammate.";
@@ -72,21 +73,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadDemoProfilesButton.addEventListener("click", async () => {
         try {
-            setLoading(true, "Loading demo profiles...");
+            setLoading(true, "Loading the demo dataset...");
 
             const response = await postJson("/load_demo_profiles", {});
             await refreshParticipants();
 
             statusElement.textContent =
-                response.message || "6 demo profiles loaded successfully!";
+                response.message || "Demo dataset loaded successfully!";
         } catch (error) {
-            showError(error, "Could not load demo profiles. Please try again.");
+            showError(error, "Could not load the demo dataset. Please try again.");
         } finally {
             setLoading(false);
         }
     });
 
-    findSelectedMatchButton.addEventListener("click", async () => {
+    findMatchButton.addEventListener("click", findMatchForSelectedParticipant);
+
+    async function findMatchForSelectedParticipant() {
         const selectedProfile = getSelectedParticipantProfile();
 
         if (!selectedProfile) {
@@ -108,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } finally {
             setLoading(false);
         }
-    });
+    }
 
     function setMode(mode) {
         const isCreateMode = mode === "create";
@@ -163,9 +166,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (preferredName) {
-            const preferredIndex = participantProfiles.findIndex(
-                (profile) => profile.name === preferredName
-            );
+            let preferredIndex = -1;
+
+            for (let index = participantProfiles.length - 1; index >= 0; index -= 1) {
+                if (participantProfiles[index].name === preferredName) {
+                    preferredIndex = index;
+                    break;
+                }
+            }
 
             if (preferredIndex >= 0) {
                 participantSelect.value = String(preferredIndex);
@@ -325,9 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
         loadDemoProfilesButton.textContent = loading
             ? "Loading..."
             : buttonText.loadDemoProfiles;
-        findSelectedMatchButton.textContent = loading
-            ? "Matching..."
-            : buttonText.findSelectedMatch;
+        findMatchButton.textContent = loading ? "Matching..." : buttonText.findMatch;
 
         updateControlStates();
 
@@ -342,7 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
         submitButton.disabled = isLoading;
         loadDemoProfilesButton.disabled = isLoading;
         participantSelect.disabled = isLoading || participantProfiles.length === 0;
-        findSelectedMatchButton.disabled = isLoading || participantProfiles.length === 0;
+        findMatchButton.disabled = isLoading || participantProfiles.length === 0;
     }
 
     function showError(error, fallbackMessage) {

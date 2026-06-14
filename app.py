@@ -61,6 +61,38 @@ DEMO_PROFILES = [
         "project_idea": "Sustainability",
         "is_demo": True,
     },
+    {
+        "name": "Kabir",
+        "skills": "Docker, Kubernetes, AWS, CI/CD",
+        "looking_for": "Backend Developer",
+        "project_interest": "Cloud Automation",
+        "project_idea": "Cloud Automation",
+        "is_demo": True,
+    },
+    {
+        "name": "Zoya",
+        "skills": "Cybersecurity, Linux, OWASP, Network Security",
+        "looking_for": "Full Stack Developer",
+        "project_interest": "Digital Safety",
+        "project_idea": "Digital Safety",
+        "is_demo": True,
+    },
+    {
+        "name": "Ishaan",
+        "skills": "Solidity, Ethereum, Smart Contracts, Blockchain",
+        "looking_for": "UI/UX Designer",
+        "project_interest": "Web3 Social Impact",
+        "project_idea": "Web3 Social Impact",
+        "is_demo": True,
+    },
+    {
+        "name": "Meera",
+        "skills": "Cloud, Azure, Serverless, Terraform",
+        "looking_for": "Data Scientist",
+        "project_interest": "Climate Tech",
+        "project_idea": "Climate Tech",
+        "is_demo": True,
+    },
 ]
 
 
@@ -128,7 +160,7 @@ def load_demo_profiles():
 
     return jsonify(
         {
-            "message": "6 demo profiles loaded successfully!",
+            "message": "Demo dataset loaded successfully!",
             "added_count": len(added_profiles),
             "demo_profile_count": len(DEMO_PROFILES),
         }
