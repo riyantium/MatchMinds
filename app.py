@@ -12,6 +12,57 @@ load_dotenv()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "matchminds-dev-secret")
 
+DEMO_PROFILES = [
+    {
+        "name": "Aman",
+        "skills": "React, JavaScript, Firebase",
+        "looking_for": "AI Engineer",
+        "project_interest": "EdTech",
+        "project_idea": "EdTech",
+        "is_demo": True,
+    },
+    {
+        "name": "Priya",
+        "skills": "UI/UX, Figma, HTML, CSS",
+        "looking_for": "Backend Developer",
+        "project_interest": "Healthcare",
+        "project_idea": "Healthcare",
+        "is_demo": True,
+    },
+    {
+        "name": "Arjun",
+        "skills": "Python, Machine Learning, Data Science",
+        "looking_for": "Frontend Developer",
+        "project_interest": "AI Healthcare",
+        "project_idea": "AI Healthcare",
+        "is_demo": True,
+    },
+    {
+        "name": "Sneha",
+        "skills": "FastAPI, Python, SQL",
+        "looking_for": "UI/UX Designer",
+        "project_interest": "FinTech",
+        "project_idea": "FinTech",
+        "is_demo": True,
+    },
+    {
+        "name": "Rahul",
+        "skills": "Flutter, Dart, Firebase",
+        "looking_for": "AI Developer",
+        "project_interest": "Agriculture",
+        "project_idea": "Agriculture",
+        "is_demo": True,
+    },
+    {
+        "name": "Neha",
+        "skills": "Node.js, Express, MongoDB",
+        "looking_for": "React Developer",
+        "project_interest": "Sustainability",
+        "project_idea": "Sustainability",
+        "is_demo": True,
+    },
+]
+
 
 @app.get("/")
 def index():
@@ -48,6 +99,29 @@ def find_match():
     match_result = find_best_match(current_profile, all_profiles)
 
     return jsonify(match_result)
+
+
+@app.post("/load_demo_profiles")
+def load_demo_profiles():
+    existing_demo_names = {
+        profile.get("name")
+        for profile in get_profiles()
+        if profile.get("is_demo")
+    }
+
+    added_profiles = []
+    for profile in DEMO_PROFILES:
+        if profile["name"] not in existing_demo_names:
+            added_profiles.append(add_profile(profile))
+            existing_demo_names.add(profile["name"])
+
+    return jsonify(
+        {
+            "message": "6 demo profiles loaded successfully!",
+            "added_count": len(added_profiles),
+            "demo_profile_count": len(DEMO_PROFILES),
+        }
+    )
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("profile-form");
     const submitButton = document.getElementById("submit-profile-button");
     const findMatchButton = document.getElementById("find-match-button");
+    const loadDemoProfilesButton = document.getElementById("load-demo-profiles-button");
 
     const statusElement = document.getElementById("match-status");
     const bestTeammateElement = document.getElementById("best-teammate");
@@ -46,6 +47,21 @@ document.addEventListener("DOMContentLoaded", () => {
             renderMatch(response);
         } catch (error) {
             showError(error, "Could not find a match right now. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    });
+
+    loadDemoProfilesButton.addEventListener("click", async () => {
+        try {
+            setLoading(true, "Loading demo profiles...");
+
+            const response = await postJson("/load_demo_profiles", {});
+
+            statusElement.textContent =
+                response.message || "6 demo profiles loaded successfully!";
+        } catch (error) {
+            showError(error, "Could not load demo profiles. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -155,9 +171,11 @@ document.addEventListener("DOMContentLoaded", () => {
     function setLoading(isLoading, message) {
         submitButton.disabled = isLoading;
         findMatchButton.disabled = isLoading;
+        loadDemoProfilesButton.disabled = isLoading;
 
         submitButton.textContent = isLoading ? "Please wait..." : "Submit Profile";
         findMatchButton.textContent = isLoading ? "Matching..." : "Find Match";
+        loadDemoProfilesButton.textContent = isLoading ? "Loading..." : "Load Demo Profiles";
 
         if (message) {
             statusElement.textContent = message;
