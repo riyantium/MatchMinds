@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const complementarySkillsElement = document.getElementById("complementary-skills");
     const aiExplanationElement = document.getElementById("ai-explanation");
 
+    let lastSubmittedProfile = null;
+    let lastSubmittedProfileSignature = "";
+
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
@@ -20,8 +23,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const response = await postJson("/submit_profile", profile);
 
-            statusElement.textContent = response.message || "Profile submitted successfully.";
-            form.reset();
+            lastSubmittedProfile = response.profile || profile;
+            lastSubmittedProfileSignature = profileSignature(profile);
+            statusElement.textContent =
+                response.message || "Profile submitted successfully. You can now find your teammate.";
         } catch (error) {
             showError(error, "Could not submit your profile. Please try again.");
         } finally {
@@ -33,8 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             setLoading(true, "Finding your best teammate...");
 
+            const currentProfile = getProfileForMatch();
             const response = await postJson("/find_match", {
-                current_profile: collectProfile(),
+                current_profile: currentProfile,
             });
 
             renderMatch(response);
@@ -52,6 +58,28 @@ document.addEventListener("DOMContentLoaded", () => {
             looking_for: document.getElementById("looking-for").value.trim(),
             project_interest: document.getElementById("project-interest").value.trim(),
         };
+    }
+
+    function getProfileForMatch() {
+        const currentFormProfile = collectProfile();
+
+        if (
+            lastSubmittedProfile &&
+            profileSignature(currentFormProfile) === lastSubmittedProfileSignature
+        ) {
+            return lastSubmittedProfile;
+        }
+
+        return currentFormProfile;
+    }
+
+    function profileSignature(profile) {
+        return JSON.stringify({
+            name: profile.name || "",
+            skills: profile.skills || "",
+            looking_for: profile.looking_for || "",
+            project_interest: profile.project_interest || "",
+        });
     }
 
     async function postJson(url, payload) {
