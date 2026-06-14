@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("profile-form");
     const submitButton = document.getElementById("submit-profile-button");
     const findMatchButton = document.getElementById("find-match-button");
+    const findSavedMatchButton = document.getElementById("find-saved-match-button");
+    const editProfileButton = document.getElementById("edit-profile-button");
     const loadDemoProfilesButton = document.getElementById("load-demo-profiles-button");
 
     const statusElement = document.getElementById("match-status");
@@ -11,8 +13,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const complementarySkillsElement = document.getElementById("complementary-skills");
     const aiExplanationElement = document.getElementById("ai-explanation");
 
+    const savedProfileKey = "matchminds_saved_profile";
+    const buttonText = {
+        submit: "Submit Profile",
+        findMatch: "Find Match",
+        findSavedMatch: "🔍 Find My Match",
+        editProfile: "✏️ Edit Profile",
+        loadDemoProfiles: "Load Demo Profiles",
+    };
+
     let lastSubmittedProfile = null;
     let lastSubmittedProfileSignature = "";
+
+    const savedProfile = loadSavedProfile();
+    if (savedProfile) {
+        restoreProfile(savedProfile);
+        lastSubmittedProfile = savedProfile;
+        lastSubmittedProfileSignature = profileSignature(savedProfile);
+        statusElement.textContent = "Saved profile restored. You can now find your teammate.";
+    }
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -25,9 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await postJson("/submit_profile", profile);
 
             lastSubmittedProfile = response.profile || profile;
-            lastSubmittedProfileSignature = profileSignature(profile);
-            statusElement.textContent =
-                response.message || "Profile submitted successfully. You can now find your teammate.";
+            lastSubmittedProfileSignature = profileSignature(lastSubmittedProfile);
+            saveProfile(lastSubmittedProfile);
+            statusElement.textContent = "Profile submitted successfully. You can now find your teammate.";
         } catch (error) {
             showError(error, "Could not submit your profile. Please try again.");
         } finally {
@@ -52,6 +71,45 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    findSavedMatchButton.addEventListener("click", async () => {
+        const savedProfile = loadSavedProfile();
+
+        if (!savedProfile) {
+            statusElement.textContent = "Create and submit your profile first, then we can find your match.";
+            return;
+        }
+
+        try {
+            setLoading(true, "Finding your saved profile match...");
+
+            const response = await postJson("/find_match", {
+                current_profile: savedProfile,
+            });
+
+            renderMatch(response);
+        } catch (error) {
+            showError(error, "Could not find a match right now. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    });
+
+    editProfileButton.addEventListener("click", () => {
+        const savedProfile = loadSavedProfile();
+
+        if (!savedProfile) {
+            statusElement.textContent = "Create and submit your profile first, then you can edit it.";
+            document.getElementById("name").focus();
+            return;
+        }
+
+        restoreProfile(savedProfile);
+        lastSubmittedProfile = savedProfile;
+        lastSubmittedProfileSignature = profileSignature(savedProfile);
+        statusElement.textContent = "Edit your saved profile, then submit again to save changes.";
+        document.getElementById("name").focus();
+    });
+
     loadDemoProfilesButton.addEventListener("click", async () => {
         try {
             setLoading(true, "Loading demo profiles...");
@@ -74,6 +132,46 @@ document.addEventListener("DOMContentLoaded", () => {
             looking_for: document.getElementById("looking-for").value.trim(),
             project_interest: document.getElementById("project-interest").value.trim(),
         };
+    }
+
+    function restoreProfile(profile) {
+        document.getElementById("name").value = profile.name || "";
+        document.getElementById("skills").value = profile.skills || "";
+        document.getElementById("looking-for").value = profile.looking_for || "";
+        document.getElementById("project-interest").value = profile.project_interest || "";
+    }
+
+    function saveProfile(profile) {
+        try {
+            localStorage.setItem(savedProfileKey, JSON.stringify(profile));
+        } catch (error) {
+            return;
+        }
+    }
+
+    function loadSavedProfile() {
+        let savedProfile = null;
+
+        try {
+            savedProfile = localStorage.getItem(savedProfileKey);
+        } catch (error) {
+            return null;
+        }
+
+        if (!savedProfile) {
+            return null;
+        }
+
+        try {
+            return JSON.parse(savedProfile);
+        } catch (error) {
+            try {
+                localStorage.removeItem(savedProfileKey);
+            } catch (removeError) {
+                return null;
+            }
+            return null;
+        }
     }
 
     function getProfileForMatch() {
@@ -171,11 +269,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function setLoading(isLoading, message) {
         submitButton.disabled = isLoading;
         findMatchButton.disabled = isLoading;
+        findSavedMatchButton.disabled = isLoading;
+        editProfileButton.disabled = isLoading;
         loadDemoProfilesButton.disabled = isLoading;
 
-        submitButton.textContent = isLoading ? "Please wait..." : "Submit Profile";
-        findMatchButton.textContent = isLoading ? "Matching..." : "Find Match";
-        loadDemoProfilesButton.textContent = isLoading ? "Loading..." : "Load Demo Profiles";
+        submitButton.textContent = isLoading ? "Please wait..." : buttonText.submit;
+        findMatchButton.textContent = isLoading ? "Matching..." : buttonText.findMatch;
+        findSavedMatchButton.textContent = isLoading ? "Matching..." : buttonText.findSavedMatch;
+        editProfileButton.textContent = isLoading ? "Please wait..." : buttonText.editProfile;
+        loadDemoProfilesButton.textContent = isLoading ? "Loading..." : buttonText.loadDemoProfiles;
 
         if (message) {
             statusElement.textContent = message;
