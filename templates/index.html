@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MatchMinds - AI Teammate Matcher</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <h1>MatchMinds – AI Teammate Matcher</h1>
+        <p class="site-tagline">Find a hackathon teammate whose skills and goals fit yours.</p>
+    </header>
+
+    <main class="app-shell">
+        <section class="profile-section" aria-labelledby="profile-form-title">
+            <h2 id="profile-form-title">Create Your Profile</h2>
+
+            <form id="profile-form" class="profile-form">
+                <fieldset class="form-fields">
+                    <legend>Participant details</legend>
+
+                    <p class="form-field">
+                        <label for="name">Name</label>
+                        <input
+                            id="name"
+                            class="form-input"
+                            name="name"
+                            type="text"
+                            autocomplete="name"
+                            placeholder="Enter your name"
+                            required
+                        >
+                    </p>
+
+                    <p class="form-field">
+                        <label for="skills">Skills</label>
+                        <input
+                            id="skills"
+                            class="form-input"
+                            name="skills"
+                            type="text"
+                            placeholder="Python, design, pitching"
+                            required
+                        >
+                    </p>
+
+                    <p class="form-field">
+                        <label for="looking-for">Looking For</label>
+                        <input
+                            id="looking-for"
+                            class="form-input"
+                            name="looking_for"
+                            type="text"
+                            placeholder="Frontend help, ML partner, UI designer"
+                            required
+                        >
+                    </p>
+
+                    <p class="form-field">
+                        <label for="project-interest">Project Idea / Domain Interest</label>
+                        <textarea
+                            id="project-interest"
+                            class="form-textarea"
+                            name="project_interest"
+                            rows="4"
+                            placeholder="Health tech, education, climate, fintech"
+                        ></textarea>
+                    </p>
+                </fieldset>
+
+                <div class="form-actions">
+                    <button id="submit-profile-button" class="button primary-button" type="submit">
+                        Submit Profile
+                    </button>
+                    <button id="find-match-button" class="button secondary-button" type="button">
+                        Find Match
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="match-section" aria-labelledby="match-results-title">
+            <h2 id="match-results-title">Match Result</h2>
+
+            <article id="match-result" class="match-result" aria-live="polite">
+                <p id="match-status" class="match-status">Submit a profile, then find your best teammate.</p>
+
+                <dl class="match-details">
+                    <dt>Best teammate</dt>
+                    <dd id="best-teammate" class="match-value">-</dd>
+
+                    <dt>Compatibility score</dt>
+                    <dd id="compatibility-score" class="match-value">-</dd>
+
+                    <dt>Shared interests/skills</dt>
+                    <dd id="shared-interests-skills" class="match-value">-</dd>
+
+                    <dt>Complementary skills</dt>
+                    <dd id="complementary-skills" class="match-value">-</dd>
+
+                    <dt>AI explanation</dt>
+                    <dd id="ai-explanation" class="match-value">-</dd>
+                </dl>
+            </article>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</body>
+</html>
