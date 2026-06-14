@@ -69,6 +69,17 @@ def index():
     return render_template("index.html")
 
 
+@app.get("/profiles")
+def profiles():
+    stored_profiles = get_profiles()
+    return jsonify(
+        {
+            "profiles": stored_profiles,
+            "count": len(stored_profiles),
+        }
+    )
+
+
 @app.post("/submit_profile")
 def submit_profile():
     profile_data = request.get_json(silent=True) or {}

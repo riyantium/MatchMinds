@@ -8,12 +8,40 @@
 </head>
 <body>
     <header class="site-header">
-        <h1>MatchMinds – AI Teammate Matcher</h1>
+        <h1>MatchMinds - AI Teammate Matcher</h1>
         <p class="site-tagline">Find a hackathon teammate whose skills and goals fit yours.</p>
     </header>
 
     <main class="app-shell">
-        <section class="profile-section" aria-labelledby="profile-form-title">
+        <section class="flow-section" aria-labelledby="flow-title">
+            <div class="flow-copy">
+                <h2 id="flow-title">Choose your path</h2>
+                <p class="participant-count">
+                    <span id="participant-count">0</span> registered participants
+                </p>
+            </div>
+
+            <div class="flow-actions">
+                <button
+                    id="create-profile-choice"
+                    class="button primary-button"
+                    type="button"
+                    aria-pressed="true"
+                >
+                    Create New Profile
+                </button>
+                <button
+                    id="existing-profile-choice"
+                    class="button secondary-button"
+                    type="button"
+                    aria-pressed="false"
+                >
+                    I Already Have a Profile
+                </button>
+            </div>
+        </section>
+
+        <section id="create-profile-panel" class="profile-section" aria-labelledby="profile-form-title">
             <h2 id="profile-form-title">Create Your Profile</h2>
 
             <form id="profile-form" class="profile-form">
@@ -73,15 +101,6 @@
                     <button id="submit-profile-button" class="button primary-button" type="submit">
                         Submit Profile
                     </button>
-                    <button id="find-match-button" class="button secondary-button" type="button">
-                        Find Match
-                    </button>
-                    <button id="find-saved-match-button" class="button primary-button" type="button">
-                        🔍 Find My Match
-                    </button>
-                    <button id="edit-profile-button" class="button secondary-button" type="button">
-                        ✏️ Edit Profile
-                    </button>
                     <button id="load-demo-profiles-button" class="button secondary-button" type="button">
                         Load Demo Profiles
                     </button>
@@ -89,11 +108,35 @@
             </form>
         </section>
 
+        <section
+            id="existing-profile-panel"
+            class="profile-section"
+            aria-labelledby="existing-profile-title"
+            hidden
+        >
+            <h2 id="existing-profile-title">Find a Match for a Registered Participant</h2>
+
+            <div class="existing-profile-controls">
+                <p class="form-field">
+                    <label for="participant-select">Participant</label>
+                    <select id="participant-select" class="form-input" name="participant">
+                        <option value="">No participants registered yet</option>
+                    </select>
+                </p>
+
+                <div class="form-actions">
+                    <button id="find-selected-match-button" class="button primary-button" type="button">
+                        Find My Match
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <section class="match-section" aria-labelledby="match-results-title">
             <h2 id="match-results-title">Match Result</h2>
 
             <article id="match-result" class="match-result" aria-live="polite">
-                <p id="match-status" class="match-status">Submit a profile, then find your best teammate.</p>
+                <p id="match-status" class="match-status">Create a profile or select a participant to find a match.</p>
 
                 <dl class="match-details">
                     <dt>Best teammate</dt>
