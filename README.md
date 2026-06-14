@@ -124,3 +124,11 @@ Helping teams start collaborating immediately.
 
 ---
 
+## Home Page
+<img width="1415" height="896" alt="image" src="https://github.com/user-attachments/assets/e925e1ad-cd39-46ed-a365-490d9253cfc8" />
+
+## Analysis page
+
+<img width="1411" height="902" alt="image" src="https://github.com/user-attachments/assets/da5cbb07-3e99-4bf3-8f35-ec3813177a45" />
+<img width="1282" height="900" alt="image" src="https://github.com/user-attachments/assets/82f4a7ac-3b86-40ab-9500-1c0753c643d0" />
+
