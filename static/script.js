@@ -284,6 +284,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderMatch(response) {
+        document.querySelector('.match-details').style.display = 'grid';
+        document.querySelector('.match-enhancements').style.display = 'block';
         const match = response.match || response;
 
         statusElement.textContent =

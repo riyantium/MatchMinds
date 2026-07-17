@@ -309,6 +309,11 @@ select.form-input {
     line-height: 1.45;
 }
 
+.match-details,
+.match-enhancements {
+    display: none;
+}
+
 #compatibility-score {
     color: #ffffff;
     font-size: 1.35rem;
