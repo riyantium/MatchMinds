@@ -41,3 +41,8 @@ def clear_profiles():
     with _get_connection() as conn:
         conn.execute("DELETE FROM profiles")
         conn.commit()
+
+def delete_profile(name: str):
+    with _get_connection() as conn:
+        conn.execute("DELETE FROM profiles WHERE name = ?", (name,))
+        conn.commit()

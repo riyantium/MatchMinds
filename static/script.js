@@ -94,6 +94,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
     findMatchButton.addEventListener("click", findMatchForSelectedParticipant);
 
+    const deleteProfileButton = document.getElementById("delete-profile-button");
+
+    deleteProfileButton.addEventListener("click", async () => {
+        const selectedProfile = getSelectedParticipantProfile();
+        if (!selectedProfile) {
+            statusElement.textContent = "Select a profile to delete first.";
+            return;
+        }
+
+        const confirmed = confirm(`Are you sure you want to delete ${selectedProfile.name}'s profile?`);
+        if (!confirmed) return;
+
+        try {
+            setLoading(true, "Deleting profile...");
+            await postJson("/delete_profile", { name: selectedProfile.name });
+            await refreshParticipants();
+            statusElement.textContent = `${selectedProfile.name}'s profile has been deleted.`;
+        } catch (error) {
+            showError(error, "Could not delete the profile. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    });
+
     async function findMatchForSelectedParticipant() {
         const selectedProfile = getSelectedParticipantProfile();
 

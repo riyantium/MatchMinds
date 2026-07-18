@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
 
+from services import profile_manager
 from services.ai_matcher import find_best_match
 from services.profile_manager import add_profile, get_profiles
 
@@ -106,6 +107,14 @@ def load_demo_profiles():
         }
     )
 
+@app.route("/delete_profile", methods=["POST"])
+def delete_profile():
+    data = request.get_json()
+    name = data.get("name")
+    if not name:
+        return jsonify({"error": "Name is required"}), 400
+    profile_manager.delete_profile(name)
+    return jsonify({"message": f"Profile for {name} deleted successfully."})
 
 if __name__ == "__main__":
     app.run(debug=True)
