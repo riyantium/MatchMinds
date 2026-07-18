@@ -73,6 +73,10 @@ textarea {
     align-items: start;
 }
 
+.match-section {
+    grid-column: 1 / -1;
+}
+
 .flow-section,
 .profile-section,
 .match-result {
@@ -449,4 +453,68 @@ select.form-input {
 
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+.match-cards {
+    display: none;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.match-card {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.match-card-rank {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+}
+
+.match-card-name {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.match-card-score {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #ffffff;
+}
+
+.match-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.match-card-label {
+    margin: 8px 0 2px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.match-card-value {
+    margin: 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.4;
+}
+
+@media (max-width: 820px) {
+    .match-cards {
+        grid-template-columns: 1fr;
+    }
 }

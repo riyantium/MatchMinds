@@ -12,16 +12,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const participantCountElement = document.getElementById("participant-count");
 
     const statusElement = document.getElementById("match-status");
-    const bestTeammateElement = document.getElementById("best-teammate");
-    const compatibilityScoreElement = document.getElementById("compatibility-score");
-    const sharedInterestsSkillsElement = document.getElementById("shared-interests-skills");
-    const complementarySkillsElement = document.getElementById("complementary-skills");
-    const aiExplanationElement = document.getElementById("ai-explanation");
-    const whyGoodMatchElement = document.getElementById("why-good-match");
-    const projectIdeaElement = document.getElementById("project-idea");
-    const teamNameElement = document.getElementById("team-name");
-    const combinedSkillsElement = document.getElementById("combined-skills");
-    const contactInfoElement = document.getElementById("contact-info");
+    //const bestTeammateElement = document.getElementById("best-teammate");
+    //const compatibilityScoreElement = document.getElementById("compatibility-score");
+    //const sharedInterestsSkillsElement = document.getElementById("shared-interests-skills");
+    //const complementarySkillsElement = document.getElementById("complementary-skills");
+    //const aiExplanationElement = document.getElementById("ai-explanation");
+    //const whyGoodMatchElement = document.getElementById("why-good-match");
+    //const projectIdeaElement = document.getElementById("project-idea");
+    //const teamNameElement = document.getElementById("team-name");
+    //const combinedSkillsElement = document.getElementById("combined-skills");
+    //const contactInfoElement = document.getElementById("contact-info");
 
     const savedProfileKey = "matchminds_saved_profile";
     const buttonText = {
@@ -311,23 +311,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderMatch(response) {
-        document.querySelector('.match-details').style.display = 'grid';
-        document.querySelector('.match-enhancements').style.display = 'block';
-        const match = response.match || response;
+        const matches = response.matches || [response];
+        
+        document.getElementById("match-cards").style.display = "grid";
 
-        statusElement.textContent =
-            response.message || match.message || "Match found successfully.";
+        matches.slice(0, 3).forEach((match, index) => {
+            const i = index + 1;
+            const teammate = match.best_teammate || {};
 
-        bestTeammateElement.textContent = formatTeammate(match.best_teammate);
-        compatibilityScoreElement.textContent = formatScore(match.compatibility_score);
-        sharedInterestsSkillsElement.textContent = formatList(match.shared_interests_or_skills);
-        complementarySkillsElement.textContent = formatList(match.complementary_skills);
-        aiExplanationElement.textContent = match.explanation || "-";
-        whyGoodMatchElement.textContent = match.why_good_match || match.explanation || "-";
-        projectIdeaElement.textContent = match.project_idea || "-";
-        teamNameElement.textContent = match.team_name || "-";
-        combinedSkillsElement.textContent = formatList(match.combined_skills);
-        contactInfoElement.textContent = match.best_teammate?.contact || "-";
+            document.getElementById(`match-name-${i}`).textContent = teammate.name || "-";
+            document.getElementById(`match-score-${i}`).textContent = formatScore(match.compatibility_score);
+            document.getElementById(`match-skills-${i}`).textContent = teammate.skills || "-";
+            document.getElementById(`match-shared-${i}`).textContent = formatList(match.shared_interests_or_skills);
+            document.getElementById(`match-why-${i}`).textContent = match.why_good_match || match.explanation || "-";
+            document.getElementById(`match-project-${i}`).textContent = match.project_idea || "-";
+            document.getElementById(`match-contact-${i}`).textContent = teammate.contact || "-";
+        });
+
+        statusElement.textContent = response.message || "Top 3 matches found!";
     }
 
     function formatTeammate(teammate) {

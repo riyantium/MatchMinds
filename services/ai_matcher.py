@@ -73,7 +73,8 @@ def _openai_match(current_profile, candidates, api_key):
                     "Find the best teammate for the current profile.\n\n"
                     f"Current profile:\n{json.dumps(current_profile)}\n\n"
                     f"Candidate profiles:\n{json.dumps(numbered_candidates)}\n\n"
-                    "Return JSON with these fields: "
+                    "Return JSON with a 'matches' array containing the top 3 best teammates ranked by compatibility. "
+                    "Each match should have these fields: "
                     "candidate_number, best_teammate, compatibility_score, "
                     "shared_interests_or_skills, complementary_skills, explanation, "
                     "why_good_match, project_idea, team_name, combined_skills. "
@@ -89,7 +90,19 @@ def _openai_match(current_profile, candidates, api_key):
 
     content = response.choices[0].message.content or "{}"
     result = json.loads(content)
-    return _normalize_ai_result(result, candidates)
+    return _normalize_ai_results(result, candidates)
+
+def _normalize_ai_results(result, candidates):
+    matches = result.get("matches", [])
+    normalized = []
+    for match in matches[:3]:
+        try:
+            normalized.append(_normalize_ai_result(match, candidates))
+        except Exception:
+            continue
+    if not normalized:
+        raise ValueError("AI response did not include usable matches.")
+    return {"matches": normalized}
 
 
 def _normalize_ai_result(result, candidates):
