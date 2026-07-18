@@ -338,18 +338,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function setLoading(loading, message) {
         isLoading = loading;
+        const overlay = document.getElementById("loading-overlay");
+        const loadingText = document.getElementById("loading-text");
+
+        if (loading) {
+            overlay.classList.add("active");
+            loadingText.textContent = message || "Please wait...";
+        } else {
+            overlay.classList.remove("active");
+        }
 
         submitButton.textContent = loading ? "Please wait..." : buttonText.submit;
-        loadDemoProfilesButton.textContent = loading
-            ? "Loading..."
-            : buttonText.loadDemoProfiles;
+        loadDemoProfilesButton.textContent = loading ? "Loading..." : buttonText.loadDemoProfiles;
         findMatchButton.textContent = loading ? "Matching..." : buttonText.findMatch;
 
         updateControlStates();
-
-        if (message) {
-            statusElement.textContent = message;
-        }
     }
 
     function updateControlStates() {
