@@ -32,10 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let participantProfiles = [];
     let isLoading = false;
 
-    const savedProfile = loadSavedProfile();
-    if (savedProfile) {
-        restoreProfile(savedProfile);
-    }
+    //const savedProfile = loadSavedProfile();
+    //if (savedProfile) {
+    //    restoreProfile(savedProfile);
+    //}
 
     setMode("create");
     updateControlStates();
@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     createProfileChoice.addEventListener("click", () => {
         setMode("create");
+        form.reset();
     });
 
     existingProfileChoice.addEventListener("click", () => {
