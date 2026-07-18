@@ -8,7 +8,7 @@ from openai import OpenAI
 
 load_dotenv()
 
-DEFAULT_MODEL = os.getenv("OPENAI_MODEL", "gpt-5-mini")
+DEFAULT_MODEL = os.getenv("OPENAI_MODEL", "gpt-5.6-luna")
 
 
 def find_best_match(current_profile: dict, all_profiles: list):

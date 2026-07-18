@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const projectIdeaElement = document.getElementById("project-idea");
     const teamNameElement = document.getElementById("team-name");
     const combinedSkillsElement = document.getElementById("combined-skills");
+    const contactInfoElement = document.getElementById("contact-info");
 
     const savedProfileKey = "matchminds_saved_profile";
     const buttonText = {
@@ -221,6 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
             looking_for: document.getElementById("looking-for").value.trim(),
             project_interest: projectInterest,
             project_idea: projectInterest,
+            contact: document.getElementById("contact").value.trim(),
         };
     }
 
@@ -325,6 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
         projectIdeaElement.textContent = match.project_idea || "-";
         teamNameElement.textContent = match.team_name || "-";
         combinedSkillsElement.textContent = formatList(match.combined_skills);
+        contactInfoElement.textContent = match.best_teammate?.contact || "-";
     }
 
     function formatTeammate(teammate) {

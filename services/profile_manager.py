@@ -16,7 +16,8 @@ def _init_db():
                 name TEXT NOT NULL,
                 skills TEXT NOT NULL,
                 looking_for TEXT NOT NULL,
-                project_interest TEXT
+                project_interest TEXT,
+                contact TEXT
             )
         """)
         conn.commit()
@@ -26,8 +27,8 @@ _init_db()
 def add_profile(profile: dict):
     with _get_connection() as conn:
         conn.execute(
-            "INSERT INTO profiles (name, skills, looking_for, project_interest) VALUES (?, ?, ?, ?)",
-            (profile.get("name"), profile.get("skills"), profile.get("looking_for"), profile.get("project_interest", ""))
+            "INSERT INTO profiles (name, skills, looking_for, project_interest, contact) VALUES (?, ?, ?, ?, ?)",
+            (profile.get("name"), profile.get("skills"), profile.get("looking_for"), profile.get("project_interest", ""), profile.get("contact", ""))
         )
         conn.commit()
     return profile.copy()
