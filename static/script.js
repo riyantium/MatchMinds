@@ -86,6 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             statusElement.textContent =
                 response.message || "Demo dataset loaded successfully!";
+            loadDemoProfilesButton.style.display = "none";
         } catch (error) {
             showError(error, "Could not load the demo dataset. Please try again.");
         } finally {
@@ -177,6 +178,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderParticipantOptions(preferredName) {
         participantCountElement.textContent = String(participantProfiles.length);
+
+        if (participantProfiles.length > 0) {
+            loadDemoProfilesButton.style.display = "none";
+        } else {
+            loadDemoProfilesButton.style.display = "inline-block";
+        }
         participantSelect.innerHTML = "";
 
         if (participantProfiles.length === 0) {
