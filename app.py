@@ -116,5 +116,10 @@ def delete_profile():
     profile_manager.delete_profile(name)
     return jsonify({"message": f"Profile for {name} deleted successfully."})
 
+@app.route("/clear_profiles", methods=["POST"])
+def clear_all_profiles():
+    profile_manager.clear_profiles()
+    return jsonify({"message": "All profiles cleared."})
+
 if __name__ == "__main__":
     app.run(debug=True)

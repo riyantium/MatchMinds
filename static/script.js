@@ -120,6 +120,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    const clearAllButton = document.getElementById("clear-all-button");
+
+    clearAllButton.addEventListener("click", async () => {
+        const confirmed = confirm("Are you sure you want to delete ALL profiles?");
+        if (!confirmed) return;
+
+        try {
+            setLoading(true, "Clearing all profiles...");
+            await postJson("/clear_profiles", {});
+            await refreshParticipants();
+            statusElement.textContent = "All profiles have been cleared.";
+            loadDemoProfilesButton.style.display = "inline-block";
+        } catch (error) {
+            showError(error, "Could not clear profiles. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    });
+
     async function findMatchForSelectedParticipant() {
         const selectedProfile = getSelectedParticipantProfile();
 
