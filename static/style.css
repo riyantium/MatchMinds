@@ -490,6 +490,8 @@ select.form-input {
     font-size: 1.5rem;
     font-weight: 900;
     color: #ffffff;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 8px;
 }
 
 .match-card-body {
@@ -503,7 +505,8 @@ select.form-input {
     font-size: 0.75rem;
     font-weight: 800;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.6);
+    color: #ffffff;
+    letter-spacing: 0.05em;
 }
 
 .match-card-value {

@@ -321,6 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const matches = response.matches || [response];
         
         document.getElementById("match-cards").style.display = "grid";
+        document.getElementById("save-pdf-button").style.display = "inline-block";
 
         matches.slice(0, 3).forEach((match, index) => {
             const i = index + 1;
