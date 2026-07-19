@@ -325,7 +325,17 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById(`match-shared-${i}`).textContent = formatList(match.shared_interests_or_skills);
             document.getElementById(`match-why-${i}`).textContent = match.why_good_match || match.explanation || "-";
             document.getElementById(`match-project-${i}`).textContent = match.project_idea || "-";
-            document.getElementById(`match-contact-${i}`).textContent = teammate.contact || "-";
+            const contactValue = teammate.contact || "";
+            const contactEl = document.getElementById(`match-contact-${i}`);
+            if (contactValue.includes("linkedin.com")) {
+                contactEl.innerHTML = `<a href="https://${contactValue.replace("https://", "")}" target="_blank" style="color:#9ee8ff;">View LinkedIn</a>`;
+            } else if (contactValue.includes("@")) {
+                contactEl.innerHTML = `<a href="mailto:${contactValue}" style="color:#9ee8ff;">Send Email</a>`;
+            } else if (contactValue) {
+                contactEl.textContent = contactValue;
+            } else {
+                contactEl.textContent = "-";
+            }
         });
 
         statusElement.textContent = response.message || "Top 3 matches found!";
