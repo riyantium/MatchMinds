@@ -86,6 +86,35 @@ MatchMinds/
 
 ---
 
+## How I Built This with Codex & GPT-5.6
+
+### Development with Codex
+I used OpenAI Codex throughout the development of MatchMinds as an AI coding agent. Codex helped me:
+
+- **Scaffold the project structure** - setting up the Flask app, routing, and service layer separation between `ai_matcher.py` and `profile_manager.py`
+- **Build the matching logic** - Codex helped implement the fallback rule-based matching system when the API is unavailable
+- **Debug issues faster** - particularly the SQLite schema migration when adding the contact column, and fixing the Render deployment configuration
+- **Iterate on the frontend** - generating and refining the 3-card match results layout and responsive CSS grid
+
+### Key Decisions I Made
+While Codex accelerated the building, the core product decisions were mine:
+- Choosing to show **top 3 matches** instead of just 1 - giving users agency
+- Adding **persistent SQLite storage** so profiles survive server restarts
+- Building a **smart contact button** that detects email vs LinkedIn automatically
+- Designing the **demo dataset** with 20 diverse realistic profiles to showcase AI reasoning
+
+### GPT-5.6 Luna in Action
+The matching engine uses **GPT-5.6 Luna** - OpenAI's latest cost-efficient model - to:
+- Analyze each participant's skills, project interests, and what they're looking for
+- Reason about compatibility between profiles holistically, not just keyword matching
+- Generate a compatibility score (0–100) with a human-readable explanation
+- Suggest a practical hackathon project idea tailored to the matched pair
+- Return results as structured JSON for seamless frontend rendering
+
+The combination of Codex for building and GPT-5.6 Luna for matching made it possible to go from idea to deployed product rapidly while maintaining quality.
+
+---
+
 ##  Example Workflow
 
 ```
